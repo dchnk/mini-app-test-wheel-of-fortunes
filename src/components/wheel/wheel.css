@@ -1,0 +1,29 @@
+.wheel {
+  max-height: 100%;
+  max-width: 57.5%;
+}
+
+.wheel__container {
+  max-width: 250px;
+  width: 100%;
+  position: relative;
+  display: flex;
+  background: linear-gradient(180deg, #3496DF 11.29%, #016CB9 94.98%);
+  box-shadow: 1px 5px 4px 0px #1B379F inset;
+  border-radius: 20px;
+  box-sizing: border-box;
+  padding: 10px;
+}
+
+.wheel__image {
+  width: 100%;
+  transition: 4s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+
+.wheel__pin {
+  position: absolute;
+  z-index: 10000;
+  left: 50%;
+  top: 5px;
+  height: 8%;
+}

@@ -1,0 +1,43 @@
+@import url("./vendor/fonts.css");
+@import url("./vendor/normalize.css");
+
+.page {
+  position: relative;
+  font-family: 'Luckiest Guy', 'Gotham Pro', Arial, sans-serif;
+  font-weight: normal;
+  text-rendering: optimizeLegibility;
+  background-color: #001583;
+  width: 100%;
+  height: 100vh;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.page__content {
+  height: 100%;
+  width: 100%;
+  padding-bottom: 10px;
+  background: radial-gradient(79.62% 85.48% at 50% 50%, #75BDFF 0%, #020065 100%);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+
+@import url("./components/button/button.css");
+
+@import url("./components/header/header.css");
+
+@import url("./components/main/main.css");
+
+@import url("./components/wheel/wheel.css");
+
+@import url("./components/winners/winners.css");
+
+@import url("./components/winner/winner.css");
+
+@import url("./components/InfoToolTip/info-tool-tip.css");

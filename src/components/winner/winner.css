@@ -1,0 +1,56 @@
+.winner__item {
+  border-radius: 5px;
+  background: linear-gradient(180deg, #62B5F0 0%, #046EBA 100%);
+  box-shadow: 1px 3px 3px 0px rgba(16, 46, 131, 0.50);
+  max-height: 52px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 8px;
+
+
+  color: #FFF;
+  text-shadow: -1px -1px 0px rgba(0, 0, 0, 0.25);
+  font-family: Gotham Pro;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+
+}
+
+.winner__photo {
+  max-height: 38px;
+  height: 100%;
+}
+
+.winner__name {
+  margin: 0;
+}
+
+.winner__win {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+}
+
+.winner__win-value {
+  margin-right: 2px;
+}
+
+.winner__win-image {
+  height: 100%;
+  max-height: 14px;
+}
+
+.winner__jackpot {
+}
+
+
+@media screen and (max-width: 351px) {
+  .winner__item {
+    font-size: 12px;
+  }
+}

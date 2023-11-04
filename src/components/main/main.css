@@ -1,0 +1,73 @@
+.main {
+  display: grid;
+  grid-template-rows: minmax(140px, max-content) minmax(140px, 326px);
+  margin: 0 14px;
+  gap: 16px;
+  height: 80%;
+  justify-items: center;
+}
+
+.main__container {
+  width: 100%;
+  display: flex;
+  gap: 14px;
+  justify-content: space-between;
+}
+
+.main__info {
+  width: 40%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  max-height: 300px;
+  gap: 5px;
+}
+
+.main__info-container {
+  color: #FAC269;
+  text-align: center;
+  text-shadow: -1px -1px 0px #B46E00;
+  font-family: Luckiest Guy;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: 1px;
+  border-radius: 10px;
+  border: 3px solid #FFCD7E;
+  background: linear-gradient(328deg, #588DD8 -2.66%, #324FA5 80.63%);
+  box-shadow: 0px 4px 4px 0px #400000 inset;
+  height: 33%;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+}
+
+.main__info-heading {
+  margin: auto;
+  max-width: 90px;
+}
+
+.main__button-spin {
+  height: 33%;
+}
+
+@media screen and (max-width: 351px) {
+  .main__info-container {
+    font-size: 16px;
+  }
+
+  .main__button-spin {
+    font-size: 16px;
+  }
+}
+
+@media screen and (max-width: 325px) {
+  .main__info-container {
+    font-size: 12px;
+  }
+
+  .main__button-spin {
+    font-size: 12px;
+  }
+}
