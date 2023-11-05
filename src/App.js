@@ -51,11 +51,18 @@ function App() {
       console.log('JACKPOT');
       return;
     }
+
+    if (currunetWin === 'GIFT300') {
+      const currunetBalance = 300;
+      return updateUserBalance(currentUser.id, currunetBalance);
+    }
+
     const currunetBalance = currunetWin + currentUser.balance - 300;
     return updateUserBalance(currentUser.id, currunetBalance);
   }
 
   function closeAllPopups() {
+    setIsLoading(false)
     setIsInfoTooltipOpen(false)
   }
 
@@ -65,33 +72,35 @@ function App() {
   }
 
   const handleButtonClick = () => {
+    setIsLoading(true);
 
     // Если у пользователя меньше 300 Coins, то мы дарим ему их. 
 
     if (currentUser.balance < 300) {
-      setIsInfoTooltipOpen('noCoins');
-      handleUpdateUserBalance(currentUser.balance + 300)
+      handleUpdateUserBalance('GIFT300')
         .then(res => {
+          console.log(res)
           setCurrentUser({
             ...currentUser,
             balance: res.balance,
           })
         });
+      setIsInfoTooltipOpen('noCoins');
       return;
     }
-    
+
     setCurrentUser({
       ...currentUser,
       balance: currentUser.balance - 300,
     })
-    
+
     const randomMath = randomInteger(1, 360);
     const currentWin = checkWin((wheelAngle + randomMath) % 360);
 
     if (currentWin === 'JACKPOT') {
       return console.log(currentWin)
     }
-    
+
     handleUpdateUserBalance(currentWin)
       .then(res => {
         setTimeout(() => {

@@ -20,8 +20,17 @@
   z-index: 10;
 }
 
+.button_disabled {
+  background: linear-gradient(242deg, #626262 27.02%, #272727 82.05%);
+}
+
+
 .button__container:active {
   transform: scale(.85);
+}
+
+.button_disabled:active {
+  transform: scale(1);
 }
 
 .button__container {
