@@ -3,14 +3,15 @@ import bridge from '@vkontakte/vk-bridge';
 import Main from './components/main/Main';
 import Header from './components/header/Header';
 import InfoTooltip from './components/InfoToolTip/InfoTooltip';
-import { getUser } from './utils/MainApi';
+import { getUser, updateUserBalance } from './utils/MainApi';
 
 
 function App() {
   const [fetchedUser, setUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [wheelAngle, setWheelAngle] = React.useState(0)
   const [isInfoTooltipOpen, setIsInfoTooltipOpen] = React.useState(null);
   const [res, setRes] = React.useState(false);
-  const [currentWinValue, setCurrentWinValue] = React.useState(null)
   const [currentUser, setCurrentUser] = React.useState({
     id: Number,
     first_name: "",
@@ -28,29 +29,11 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (!currentWinValue) {
-      return
-    }
-    if (currentWinValue === 'JACKPOT') {
-      console.log('JACKPOT');
-      setCurrentWinValue(0)
-      return;
-    }
-    const currunetBalance = currentWinValue + currentUser.balance - 300;
-    setCurrentUser({
-      ...currentUser,
-      balance: currunetBalance,
-    })
-    setCurrentWinValue(0)
-  }, [currentWinValue]);
-
-  useEffect(() => {
     if (!fetchedUser) {
       return
     }
     getUser(fetchedUser.id, fetchedUser.first_name, fetchedUser.last_name)
       .then(res => {
-        console.log(res)
         setCurrentUser({
           ...currentUser,
           id: fetchedUser.id,
@@ -62,10 +45,84 @@ function App() {
       })
   }, [fetchedUser]);
 
+  function handleUpdateUserBalance(currunetWin) {
 
+    if (currunetWin === 'JACKPOT') {
+      console.log('JACKPOT');
+      return;
+    }
+    const currunetBalance = currunetWin + currentUser.balance - 300;
+    return updateUserBalance(currentUser.id, currunetBalance);
+  }
 
   function closeAllPopups() {
     setIsInfoTooltipOpen(false)
+  }
+
+  function randomInteger(min, max) {
+    let rand = Math.floor(min + Math.random() * (max + 1 - min));
+    return rand;
+  }
+
+  const handleButtonClick = () => {
+
+    // Если у пользователя меньше 300 Coins, то мы дарим ему их. 
+
+    if (currentUser.balance < 300) {
+      setIsInfoTooltipOpen('noCoins');
+      handleUpdateUserBalance(currentUser.balance + 300)
+        .then(res => {
+          setCurrentUser({
+            ...currentUser,
+            balance: res.balance,
+          })
+        });
+      return;
+    }
+    
+    setCurrentUser({
+      ...currentUser,
+      balance: currentUser.balance - 300,
+    })
+    
+    const randomMath = randomInteger(1, 360);
+    const currentWin = checkWin((wheelAngle + randomMath) % 360);
+
+    if (currentWin === 'JACKPOT') {
+      return console.log(currentWin)
+    }
+    
+    handleUpdateUserBalance(currentWin)
+      .then(res => {
+        setTimeout(() => {
+          setIsInfoTooltipOpen(currentWin)
+          setCurrentUser({
+            ...currentUser,
+            balance: res.balance,
+          })
+        }, 4500)
+        setWheelAngle(wheelAngle + randomMath + 3600);
+      })
+  }
+
+  function checkWin(angle) {
+    if (angle > 25 && angle <= 70) {
+      return 750;
+    } else if (angle > 70 && angle <= 115) {
+      return 200;
+    } else if (angle > 115 && angle <= 160) {
+      return 150;
+    } else if (angle > 160 && angle <= 205) {
+      return 100;
+    } else if (angle > 205 && angle <= 250) {
+      return 10;
+    } else if (angle > 250 && angle <= 295) {
+      return 400;
+    } else if (angle > 295 && angle <= 340) {
+      return 250;
+    } else {
+      return ('JACKPOT');
+    }
   }
 
 
@@ -73,7 +130,7 @@ function App() {
     <div className="page" >
       <div className='page__content'>
         <Header />
-        <Main onClick={setIsInfoTooltipOpen} user={currentUser} onWin={setCurrentWinValue} />
+        <Main user={currentUser} onClickButtonSpin={handleButtonClick} isLoading={isLoading} wheelAngle={wheelAngle} />
         <InfoTooltip onClose={closeAllPopups} isOpen={isInfoTooltipOpen} res={res} />
       </div>
     </div>

@@ -12,9 +12,9 @@ function InfoTooltip(props) {
 
     <div className={props.isOpen ? ("popup popup_opened") : ("popup")}>
       <div className="popup__container">
-        <h2 className="popup__heading">You win!</h2>
+        <h2 className="popup__heading">{props.isOpen !== 'noCoins' ? ('You win!') : ('You need more Coins!')}</h2>
         {props.isOpen !== 'JACKPOT'  && <div className="popup__win">
-          <p className="popup__win-value">{props.isOpen}</p>
+          <p className="popup__win-value">{props.isOpen !== 'noCoins' ? (props.isOpen) : ('GIFT 300')}</p>
           <img className="popup__win-image" src={Coins} alt="коины"/>
         </div>}
         {props.isOpen === 'JACKPOT' && <img className="popup__jackpot" src={Jackpot} alt="джэкпот"/>}

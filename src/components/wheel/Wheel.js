@@ -3,9 +3,7 @@ import pin from '../../images/pin.png'
 import React from 'react';
 
 
-function Wheel({ wheelAngle }) {
-
-
+function Wheel({ wheelAngle, isLoading }) {
 
   return (
     <div className="wheel">
