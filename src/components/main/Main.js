@@ -3,10 +3,9 @@ import Wheel from '../wheel/Wheel';
 import Winners from '../winners/Winners';
 import Button from '../button/Button';
 
-function App({onClick, user}) {
+function App({onClick, user, onWin}) {
 
-  const [wheelAngle, setWheelAngle] = React.useState(null)
-  const [currentWinValue, setCurrentWinValue] = React.useState(null)
+  const [wheelAngle, setWheelAngle] = React.useState(0)
   const [isClicked, setIsClicked] = React.useState(false);
 
   React.useEffect(() => {
@@ -15,47 +14,72 @@ function App({onClick, user}) {
     }
     setTimeout(()=> {
       const currentAngle = wheelAngle % 360;
-      if (currentAngle > 22.5 && currentAngle <= 67.5) {
-        onClick('750');
-        console.log('750 очков на барабане');
-      } else if (currentAngle > 67.5 && currentAngle <= 112.5) {
-        onClick('200');
-        console.log('200 очков на барабане');
-      } else if (currentAngle > 112.5 && currentAngle <= 157.5) {
-        onClick('150');
-        console.log('150 очков на барабане');
-      } else if (currentAngle > 157.5 && currentAngle <= 202.5) {
-        onClick('100');
-        console.log('100 очков на барабане');
-      } else if (currentAngle > 202.5 && currentAngle <= 247.5) {
-        onClick('10');
-        console.log('10 очков на барабане');
-      } else if (currentAngle > 247.5 && currentAngle <= 292.5) {
-        onClick('400');
-        console.log('400 очков на барабане');
-      } else if (currentAngle > 292.5 && currentAngle <= 337.5) {
-        onClick('250');
-        console.log('250 очков на барабане');
+      if (currentAngle > 25 && currentAngle <= 70) {
+        onClick(750);
+      } else if (currentAngle > 70 && currentAngle <= 115) {
+        onClick(200);
+      } else if (currentAngle > 115 && currentAngle <= 160) {
+        onClick(150);
+      } else if (currentAngle > 160 && currentAngle <= 205) {
+        onClick(100);
+      } else if (currentAngle > 205 && currentAngle <= 250) {
+        onClick(10);
+      } else if (currentAngle > 250 && currentAngle <= 295) {
+        onClick(400);
+      } else if (currentAngle > 295 && currentAngle <= 340) {
+        onClick(250);
       } else {
         onClick('JACKPOT');
-        console.log('JACKPOT!');
       }
     
-    }, 4700)
+    }, 4500)
     
   }, [wheelAngle])
 
-  function randomInteger(min, max) {
-    let rand = Math.floor((min + Math.random() * (max + 1 - min)) * 10) / 10;
-    if (Math.floor(rand) === 360) {
-      rand = 4;
-      return rand;
+  function checkWin (angle) {
+    if (angle > 25 && angle <= 70) {
+      return 750;
+    } else if (angle > 70 && angle <= 115) {
+      return 200;
+    } else if (angle > 115 && angle <= 160) {
+      return 150;
+    } else if (angle > 160 && angle <= 205) {
+      return 100;
+    } else if (angle > 205 && angle <= 250) {
+      return 10;
+    } else if (angle > 250 && angle <= 295) {
+      return 400;
+    } else if (angle > 295 && angle <= 340) {
+      return 250;
+    } else {
+      return('JACKPOT');
     }
+  }
+
+  function handleButtonClick() {
+    
+    returnCurrentWin();
+    setIsClicked(true);
+  }
+
+
+  function randomInteger(min, max) {
+    let rand = Math.floor(min + Math.random() * (max + 1 - min));
     return rand;
+  }
+  
+  const returnCurrentWin = () => {
+    onWin(0);
+    if (user.balance < 300) {
+      return onClick('You need 300 for SPIN');
+    }
+    const randomMath = randomInteger(1, 360);
+    const currentWin = checkWin((wheelAngle + randomMath) % 360);   
+    setWheelAngle(wheelAngle + randomMath + 3600);
+    onWin(currentWin);
   }
 
   const getRandomWheelAngle = () => {
-    setIsClicked(true)
     const randomMath = randomInteger(1, 360);
     setWheelAngle(wheelAngle + randomMath + 3600)
   }
@@ -71,7 +95,7 @@ function App({onClick, user}) {
           <div className="main__info-container">
             <p className='main__info-heading'>{`BALANCE ${user.balance}`}</p>
           </div>
-          <Button className="main__button-spin" onClick={getRandomWheelAngle} content={'SPIN WHEEL'}/>
+          <Button className="main__button-spin" onClick={handleButtonClick} content={'SPIN WHEEL'}/>
         </div>
       </div>
       <Winners/>
