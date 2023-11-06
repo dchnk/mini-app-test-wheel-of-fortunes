@@ -3,7 +3,7 @@ import bridge from '@vkontakte/vk-bridge';
 import Main from './components/main/Main';
 import Header from './components/header/Header';
 import InfoTooltip from './components/InfoToolTip/InfoTooltip';
-import { getUser, updateUserBalance, getJackpot, increaseJackpot, winJackpot } from './utils/MainApi';
+import { getUser, updateUserBalance, getJackpot, increaseJackpot, winJackpot, getWinners, createWinner } from './utils/MainApi';
 
 
 function App() {
@@ -12,6 +12,7 @@ function App() {
   const [wheelAngle, setWheelAngle] = React.useState(0)
   const [isInfoTooltipOpen, setIsInfoTooltipOpen] = React.useState(null);
   const [jackpot, setJackpot] = useState(0)
+  const [winnerList, setWinnerList] = useState([])
   const [currentUser, setCurrentUser] = React.useState({
     id: Number,
     first_name: "",
@@ -49,6 +50,12 @@ function App() {
             setJackpot(jackpot[0].current_jackpot);
           })
       })
+      .then(() => {
+        getWinners()
+          .then((winners) => {
+            setWinnerList(winners)
+          })
+      })
   }, [fetchedUser]);
 
   function handleUpdateUserBalance(currunetWin) {
@@ -56,7 +63,9 @@ function App() {
     if (currunetWin === 'JACKPOT') {
       return winJackpot()
         .then((res) => {
+          createWinner(currentUser.id, currentUser.first_name, currentUser.last_name, currentUser.photo, res.currentWin.current_jackpot, true)
           setJackpot(res.jackpot.current_jackpot)
+
           const currunetBalance = res.currentWin.current_jackpot + currentUser.balance - 300;
           return updateUserBalance(currentUser.id, currunetBalance);
         });
@@ -68,6 +77,8 @@ function App() {
     }
 
     const currunetBalance = currunetWin + currentUser.balance - 300;
+    createWinner(currentUser.id, currentUser.first_name, currentUser.last_name, currentUser.photo, currunetWin, false)
+    
     return updateUserBalance(currentUser.id, currunetBalance);
   }
 
@@ -118,6 +129,10 @@ function App() {
             ...currentUser,
             balance: res.balance,
           })
+          getWinners()
+          .then((winners) => {
+            setWinnerList(winners)
+          })
         }, 4500)
         setWheelAngle(wheelAngle + randomMath + 3600);
       })
@@ -148,7 +163,7 @@ function App() {
     <div className="page" >
       <div className='page__content'>
         <Header />
-        <Main user={currentUser} onClickButtonSpin={handleButtonClick} isLoading={isLoading} wheelAngle={wheelAngle} jackpot={jackpot} />
+        <Main user={currentUser} onClickButtonSpin={handleButtonClick} isLoading={isLoading} wheelAngle={wheelAngle} jackpot={jackpot} winnerList={winnerList} />
         <InfoTooltip onClose={closeAllPopups} isOpen={isInfoTooltipOpen} />
       </div>
     </div>

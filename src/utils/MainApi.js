@@ -71,3 +71,28 @@ export const winJackpot = () => {
     })
 }
 
+
+export const getWinners = () => {
+  return fetch(`${BASE_URL}/winners`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    }
+  })
+    .then((res) => {
+      return checkRequestResult(res);
+    })
+}
+
+export const createWinner = (winner_id, first_name, last_name, photo, win, jackpot) => {
+  return fetch(`${BASE_URL}/winners`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ winner_id, first_name, last_name, photo, win, jackpot })
+  })
+    .then((res) => {
+      return checkRequestResult(res);
+    })
+}

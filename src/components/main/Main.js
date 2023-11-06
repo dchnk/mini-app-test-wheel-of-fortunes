@@ -3,7 +3,7 @@ import Wheel from '../wheel/Wheel';
 import Winners from '../winners/Winners';
 import Button from '../button/Button';
 
-function App({user, wheelAngle, onClickButtonSpin, isLoading, jackpot}) {
+function App({user, wheelAngle, onClickButtonSpin, isLoading, jackpot, winnerList}) {
 
   function handleButtonClick() {    
     onClickButtonSpin();
@@ -23,7 +23,7 @@ function App({user, wheelAngle, onClickButtonSpin, isLoading, jackpot}) {
           <Button className="main__button-spin" onClick={handleButtonClick} content={'SPIN WHEEL'} isLoading={isLoading}/>
         </div>
       </div>
-      <Winners/>
+      <Winners winnerList={winnerList}/>
 
     </main>
   );

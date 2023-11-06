@@ -23,6 +23,7 @@
 .winner__photo {
   max-height: 38px;
   height: 100%;
+  border-radius: 50px;
 }
 
 .winner__name {
