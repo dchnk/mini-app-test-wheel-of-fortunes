@@ -35,3 +35,39 @@ export const updateUserBalance = (id, balance) => {
     })
 }
 
+export const getJackpot = () => {
+  return fetch(`${BASE_URL}/jackpot`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    }
+  })
+    .then((res) => {
+      return checkRequestResult(res);
+    })
+}
+
+export const increaseJackpot = () => {
+  return fetch(`${BASE_URL}/jackpot/increase`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    }
+  })
+    .then((res) => {
+      return checkRequestResult(res);
+    })
+}
+
+export const winJackpot = () => {
+  return fetch(`${BASE_URL}/jackpot/win`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    }
+  })
+    .then((res) => {
+      return checkRequestResult(res);
+    })
+}
+

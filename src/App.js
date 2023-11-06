@@ -3,7 +3,7 @@ import bridge from '@vkontakte/vk-bridge';
 import Main from './components/main/Main';
 import Header from './components/header/Header';
 import InfoTooltip from './components/InfoToolTip/InfoTooltip';
-import { getUser, updateUserBalance } from './utils/MainApi';
+import { getUser, updateUserBalance, getJackpot, increaseJackpot, winJackpot } from './utils/MainApi';
 
 
 function App() {
@@ -11,7 +11,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [wheelAngle, setWheelAngle] = React.useState(0)
   const [isInfoTooltipOpen, setIsInfoTooltipOpen] = React.useState(null);
-  const [res, setRes] = React.useState(false);
+  const [jackpot, setJackpot] = useState(0)
   const [currentUser, setCurrentUser] = React.useState({
     id: Number,
     first_name: "",
@@ -43,13 +43,23 @@ function App() {
           photo: fetchedUser.photo_max_orig,
         })
       })
+      .then(() => {
+        getJackpot()
+          .then((jackpot) => {
+            setJackpot(jackpot[0].current_jackpot);
+          })
+      })
   }, [fetchedUser]);
 
   function handleUpdateUserBalance(currunetWin) {
 
     if (currunetWin === 'JACKPOT') {
-      console.log('JACKPOT');
-      return;
+      return winJackpot()
+        .then((res) => {
+          setJackpot(res.jackpot.current_jackpot)
+          const currunetBalance = res.currentWin.current_jackpot + currentUser.balance - 300;
+          return updateUserBalance(currentUser.id, currunetBalance);
+        });
     }
 
     if (currunetWin === 'GIFT300') {
@@ -79,7 +89,6 @@ function App() {
     if (currentUser.balance < 300) {
       handleUpdateUserBalance('GIFT300')
         .then(res => {
-          console.log(res)
           setCurrentUser({
             ...currentUser,
             balance: res.balance,
@@ -89,17 +98,17 @@ function App() {
       return;
     }
 
-    setCurrentUser({
-      ...currentUser,
-      balance: currentUser.balance - 300,
-    })
+    increaseJackpot()
+      .then((res) => {
+        setJackpot(res.current_jackpot)
+        setCurrentUser({
+          ...currentUser,
+          balance: currentUser.balance - 300,
+        })
+      })
 
     const randomMath = randomInteger(1, 360);
     const currentWin = checkWin((wheelAngle + randomMath) % 360);
-
-    if (currentWin === 'JACKPOT') {
-      return console.log(currentWin)
-    }
 
     handleUpdateUserBalance(currentWin)
       .then(res => {
@@ -139,8 +148,8 @@ function App() {
     <div className="page" >
       <div className='page__content'>
         <Header />
-        <Main user={currentUser} onClickButtonSpin={handleButtonClick} isLoading={isLoading} wheelAngle={wheelAngle} />
-        <InfoTooltip onClose={closeAllPopups} isOpen={isInfoTooltipOpen} res={res} />
+        <Main user={currentUser} onClickButtonSpin={handleButtonClick} isLoading={isLoading} wheelAngle={wheelAngle} jackpot={jackpot} />
+        <InfoTooltip onClose={closeAllPopups} isOpen={isInfoTooltipOpen} />
       </div>
     </div>
   );
